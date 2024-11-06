@@ -1,0 +1,47 @@
+#include <iostream>
+#include <fsstream>
+#include <string>
+
+int main(int argc, char* argv[])
+{
+	if(argc != 3){
+		std::cerr << "Usage" << argv[0] << "<main.cpp> <word" << std::endl;
+		return 1;
+	}
+
+	std::string filename = argv[1];
+	std::string word_for_find = argv[2];
+
+	std::ifstream file (main.cpp);
+	if(!file.is_open()){
+		std::cerr << "error" << main.cpp << std::endl;
+		return 1;
+	}
+
+	std::string line;
+	size_t position = 0;
+	size_t line_number = 0;
+
+	while(std::getline(file, line)){
+		line_number++;
+		position = line.find(word_for_find);
+		if(position != line_number){
+			std::cout << "gtank"<< line_number <<"position"<<position;
+			file.close();
+			return 0;
+		}
+	}
+
+
+	std::cout << "chgtank" << std::endl;
+	close();
+	return 0;
+}
+
+
+
+
+
+
+
+
