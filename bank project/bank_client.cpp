@@ -2,7 +2,7 @@
 #include <sys/mman.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include <unisth.h>
+#include <unistd.h>
 #include <pthread.h>
 #include <sstream>
 #include <string>
@@ -18,7 +18,7 @@ struct Account {
 const char* shm_name = "/bank_open";
 
 int main() {
-	int fd = shm_open(shm_name, O_RDWR, 0666);
+	int fd = shm_open(shm_name, O_RDWR, 0666); //
 	if (fd == -1) {
 		perror("shm_open");
 		return 1;
@@ -51,14 +51,16 @@ int main() {
 		iss >> cmd;
 
 		if (cmd == "PRINT") {
-			std::string what;
-			int a;
-			iss >> what >> a;
-
-			if (a < 0 || a >= N) {
+			int index;
+			iss >> index;
+			if (index < 0 || index >= N) {
 				std::cout << "Ошибка: номер счета вне диапазона\n";
 				continue;
 			}
+			pthread_mutex_lock(&accounts[index].mutex);
+			std::cout << accounts[index].balance << std::endl;
+			pthread_mutex_unlock(&accounts[index].mutex);
+
 		}
 		else if (cmd == "FREEZE" || cmd == "UNFREEZE") {
 			int a;
@@ -128,7 +130,7 @@ int main() {
 				continue;
 			}
 
-			bool ok = true;
+			bool ok = true; //флаг который говорит можно ли выполнить операцию
 
 			for (int i = 0; i < N; ++i)
 				pthread_mutex_lock(&accounts[i].mutex);
